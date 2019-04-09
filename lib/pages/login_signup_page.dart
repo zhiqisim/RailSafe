@@ -102,9 +102,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('eldeREst'),
-        ),
         body: Stack(
           children: <Widget>[
             _showBody(),
@@ -186,7 +183,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 48.0,
-          child: Image.asset('assets/smart_bed.png'),
+          child: Image.asset('assets/logo.PNG'),
         ),
       ),
     );
@@ -252,7 +249,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           child: new RaisedButton(
             elevation: 5.0,
             shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
+            color: Colors.red,
             child: _formMode == FormMode.LOGIN
                 ? new Text('Login',
                     style: new TextStyle(fontSize: 20.0, color: Colors.white))

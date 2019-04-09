@@ -10,10 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: 'eldeREst',
+        title: 'RailSafe',
         debugShowCheckedModeBanner: false,
         theme: new ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Colors.red,
         ),
         home: new RootPage(auth: new Auth()));
   }
