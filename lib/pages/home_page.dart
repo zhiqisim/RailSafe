@@ -38,6 +38,9 @@ class _HomePageState extends State<HomePage>
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
+  void fcmSubscribe() {
+    _firebaseMessaging.subscribeToTopic('all');
+  }
   // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @override
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    fcmSubscribe();
     // final data = [
     //   new LinearSleep(0, 7),
     //   new LinearSleep(1, 4),
