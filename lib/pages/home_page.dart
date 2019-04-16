@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './default_page.dart' as default_page;
 import './insight_page.dart' as insight_page;
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage>
     controller = new TabController(vsync: this, length: 3, initialIndex: 1);
     handler = _tabs[1];
     controller.addListener(handleSelected);
-     _firebaseMessaging.configure(
+    _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('on message $message');
       },
@@ -62,15 +62,15 @@ class _HomePageState extends State<HomePage>
     );
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.getToken().then((token){
+    _firebaseMessaging.getToken().then((token) {
       print(token);
     });
-  //   var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
-  //   var initializationSettingsIOS = new IOSInitializationSettings();
-  //   var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    //   var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
+    //   var initializationSettingsIOS = new IOSInitializationSettings();
+    //   var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
 
-  //   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-  //   flutterLocalNotificationsPlugin.initialize(initializationSettings, selectNotification: onSelectNotification);
+    //   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    //   flutterLocalNotificationsPlugin.initialize(initializationSettings, selectNotification: onSelectNotification);
   }
 
   @override
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage>
                 tabs: <Tab>[
                   new Tab(icon: new Icon(Icons.insert_chart)),
                   new Tab(icon: new Icon(Icons.home)),
-                  new Tab(icon: new Icon(Icons.chat))
+                  new Tab(icon: new Icon(Icons.phone))
                 ],
                 indicatorColor: Colors.red,
                 labelColor: Colors.red,
@@ -150,12 +150,14 @@ class _HomePageState extends State<HomePage>
           Flexible(child: new FallList(), flex: 1), // fall list widget
           Flexible(
               child: new TabBarView(controller: controller, children: <Widget>[
-            new insight_page.InsightPage(),
-            new default_page.DefaultPage(),
-            new chat_page.ChatPage()
-          ]), flex: 3)
+                new insight_page.InsightPage(),
+                new default_page.DefaultPage(),
+                new chat_page.ChatPage()
+              ]),
+              flex: 3)
         ]));
   }
+
   Future onSelectNotification(String payload) async {
     showDialog(
       context: context,
@@ -168,8 +170,6 @@ class _HomePageState extends State<HomePage>
     );
   }
 }
-
-
 
 class FallList extends StatelessWidget {
   @override
@@ -202,6 +202,15 @@ class FallList extends StatelessWidget {
 }
 
 class AlertCard extends StatelessWidget {
+  _launchURL() async {
+    const url = 'http://172.20.243.229:8081';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Center(
@@ -220,8 +229,8 @@ class AlertCard extends StatelessWidget {
               child: ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('OFF ALARM'),
-                    onPressed: () {/* ... */},
+                    child: const Text('VIEW LIVESTREAM'),
+                    onPressed: _launchURL,
                   ),
                   // FlatButton(
                   //   child: const Text('LISTEN'),
@@ -240,6 +249,15 @@ class AlertCard extends StatelessWidget {
 class NormalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    _launchcaller() async {
+      String url = "tel:96753321";
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+
     return new Center(
       child: Card(
         child: Column(
@@ -255,8 +273,10 @@ class NormalCard extends StatelessWidget {
               child: ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('SEND ALARM'),
-                    onPressed: () {/* ... */},
+                    child: const Text('CALL'),
+                    onPressed: () {
+                      _launchcaller();
+                    },
                   ),
                   // FlatButton(
                   //   child: const Text('LISTEN'),
@@ -272,77 +292,76 @@ class NormalCard extends StatelessWidget {
   }
 }
 
-class PointsLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
-  final bool animate;
+// class PointsLineChart extends StatelessWidget {
+//   final List<charts.Series> seriesList;
+//   final bool animate;
 
-  PointsLineChart(this.seriesList, {this.animate});
+//   PointsLineChart(this.seriesList, {this.animate});
 
-  // /// Creates a [LineChart] with sample data and no transition.
-  // factory PointsLineChart.withSampleData() {
-  //   return new PointsLineChart(
-  //     _createSampleData(),
-  //     // Disable animations for image tests.
-  //     animate: false,
-  //   );
-  // }
+//   // /// Creates a [LineChart] with sample data and no transition.
+//   // factory PointsLineChart.withSampleData() {
+//   //   return new PointsLineChart(
+//   //     _createSampleData(),
+//   //     // Disable animations for image tests.
+//   //     animate: false,
+//   //   );
+//   // }
 
-  @override
-  Widget build(BuildContext context) {
-    return new charts.LineChart(
-      seriesList,
-      animate: animate,
-      behaviors: [
-        new charts.ChartTitle('Amount of Sleep',
-            // subTitle: 'Top sub-title text',
-            behaviorPosition: charts.BehaviorPosition.top,
-            titleOutsideJustification: charts.OutsideJustification.start,
-            // Set a larger inner padding than the default (10) to avoid
-            // rendering the text too close to the top measure axis tick label.
-            // The top tick label may extend upwards into the top margin region
-            // if it is located at the top of the draw area.
-            innerPadding: 18),
-        new charts.ChartTitle('Day',
-            behaviorPosition: charts.BehaviorPosition.bottom,
-            titleOutsideJustification:
-                charts.OutsideJustification.middleDrawArea),
-        new charts.ChartTitle('Hours',
-            behaviorPosition: charts.BehaviorPosition.start,
-            titleOutsideJustification:
-                charts.OutsideJustification.middleDrawArea)
-      ],
-    );
-    // defaultRenderer: new charts.LineRendererConfig(includePoints: true)
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return new charts.LineChart(
+//       seriesList,
+//       behaviors: [
+//         new charts.ChartTitle('Amount of Sleep',
+//             // subTitle: 'Top sub-title text',
+//             behaviorPosition: charts.BehaviorPosition.top,
+//             titleOutsideJustification: charts.OutsideJustification.start,
+//             // Set a larger inner padding than the default (10) to avoid
+//             // rendering the text too close to the top measure axis tick label.
+//             // The top tick label may extend upwards into the top margin region
+//             // if it is located at the top of the draw area.
+//             innerPadding: 18),
+//         new charts.ChartTitle('Day',
+//             behaviorPosition: charts.BehaviorPosition.bottom,
+//             titleOutsideJustification:
+//                 charts.OutsideJustification.middleDrawArea),
+//         new charts.ChartTitle('Hours',
+//             behaviorPosition: charts.BehaviorPosition.start,
+//             titleOutsideJustification:
+//                 charts.OutsideJustification.middleDrawArea)
+//       ],
+//     );
+//     // defaultRenderer: new charts.LineRendererConfig(includePoints: true)
+//   }
 
-  // /// Create one series with sample hard coded data.
-  // static List<charts.Series<LinearSleep, int>> _createSampleData() {
-  //   final data = [
-  //     new LinearSleep(0, 5),
-  //     new LinearSleep(1, 25),
-  //     new LinearSleep(2, 100),
-  //     new LinearSleep(3, 75),
-  //   ];
+//   // /// Create one series with sample hard coded data.
+//   // static List<charts.Series<LinearSleep, int>> _createSampleData() {
+//   //   final data = [
+//   //     new LinearSleep(0, 5),
+//   //     new LinearSleep(1, 25),
+//   //     new LinearSleep(2, 100),
+//   //     new LinearSleep(3, 75),
+//   //   ];
 
-  //   return [
-  //     new charts.Series<LinearSleep, int>(
-  //       id: 'Sales',
-  //       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-  //       domainFn: (LinearSleep sales, _) => sales.days,
-  //       measureFn: (LinearSleep sales, _) => sales.sleepHours,
-  //       data: data,
-  //     )
-  //   ];
-  // }
-}
+//   //   return [
+//   //     new charts.Series<LinearSleep, int>(
+//   //       id: 'Sales',
+//   //       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+//   //       domainFn: (LinearSleep sales, _) => sales.days,
+//   //       measureFn: (LinearSleep sales, _) => sales.sleepHours,
+//   //       data: data,
+//   //     )
+//   //   ];
+//   // }
+// }
 
-/// Sample linear data type.
-class LinearSleep {
-  final int days;
-  final int sleepHours;
+// /// Sample linear data type.
+// class LinearSleep {
+//   final int days;
+//   final int sleepHours;
 
-  LinearSleep(this.days, this.sleepHours);
-}
+//   LinearSleep(this.days, this.sleepHours);
+// }
 
 class MyTabs {
   final String title;

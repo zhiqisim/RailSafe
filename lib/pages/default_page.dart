@@ -15,13 +15,13 @@ class _DefaultPageState extends State<DefaultPage> {
   @override
   Widget build(BuildContext context) {
     final data = [
-      new LinearSleep(0, 7),
-      new LinearSleep(1, 4),
-      new LinearSleep(2, 8),
-      new LinearSleep(3, 10),
-      new LinearSleep(4, 5),
-      new LinearSleep(5, 6),
-      new LinearSleep(6, 11)
+      new LinearSleep(1, 6),
+      new LinearSleep(2, 7),
+      new LinearSleep(3, 6),
+      new LinearSleep(4, 7),
+      new LinearSleep(5, 7),
+      new LinearSleep(6, 8),
+      new LinearSleep(7, 4)
     ];
 
     var series = [
@@ -57,9 +57,8 @@ class PointsLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.LineChart(
       seriesList,
-      animate: animate,
       behaviors: [
-        new charts.ChartTitle('Amount of Sleep',
+        new charts.ChartTitle('Amount of Time on Bed',
             // subTitle: 'Top sub-title text',
             behaviorPosition: charts.BehaviorPosition.top,
             titleOutsideJustification: charts.OutsideJustification.start,

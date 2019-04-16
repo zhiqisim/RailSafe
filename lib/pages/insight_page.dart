@@ -55,7 +55,6 @@ class SimpleBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.BarChart(
       seriesList,
-      animate: animate,
       behaviors: [
         new charts.ChartTitle('Intermittent Sleep Analysis',
             // subTitle: 'Top sub-title text',
