@@ -203,7 +203,7 @@ class FallList extends StatelessWidget {
 
 class AlertCard extends StatelessWidget {
   _launchURL() async {
-    const url = 'http://172.20.243.229:8081';
+    const url = 'http://192.168.43.82:8081';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

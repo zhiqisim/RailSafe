@@ -11,8 +11,7 @@ exports.onAlert = functions.firestore.document("test/testdoc").onUpdate((change,
             title: "EMERGENCY ALERT",
             body: "System has detected a fall!",
             icon: "default",
-            sound : "default",
-            clickAction: "FLUTTER_NOTIFICATION_CLICK"
+            sound : "default"
         }
     }
     const options = {
